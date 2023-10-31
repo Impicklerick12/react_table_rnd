@@ -1,9 +1,3 @@
-* [![React][React.js]][React-url]
-* [![React-Table][React-Table]][React-Table-url]
-* [![npm][npm]][npm-url]
-* ![JavaScript][JavaScript]
-
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
