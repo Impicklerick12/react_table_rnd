@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid';
+
 export const MOCK_DATA = [
     {"employee_id":1,"first_name":"Noelyn","last_name":"Cork","email":"ncork0@goo.ne.jp","gender":"Female","job_title":"Media Manager II","start_date":"2021/08/05","salary":735115},
     {"employee_id":2,"first_name":"Lenette","last_name":"Maggill'Andreis","email":"lmaggillandreis1@vistaprint.com","gender":"Female","job_title":"Paralegal","start_date":"2020/08/11","salary":313515},
@@ -500,3 +502,607 @@ export const MOCK_DATA = [
     {"employee_id":499,"first_name":"Terry","last_name":"Oehme","email":"toehmedu@odnoklassniki.ru","gender":"Female","job_title":"Community Outreach Specialist","start_date":"2022/06/17","salary":822256},
     {"employee_id":500,"first_name":"Antin","last_name":"Dafydd","email":"adafydddv@ifeng.com","gender":"Male","job_title":"Recruiting Manager","start_date":"2020/09/27","salary":219337}
 ];
+
+export const MOCK_MENU_DATA = [
+  {
+    drinkCategory: "Cappuccino",
+    small: "$5.95",
+    medium: "$6.45",
+    large: "$6.95",
+    id: uuid(),
+    style: {}
+  },
+  {
+    drinkCategory: "Long Black",
+    small: "$5.95",
+    medium: "$6.45",
+    large: "$6.95",
+    id: uuid(),
+    style: {}
+  },
+  {
+    drinkCategory: "Latte",
+    small: "$5.95",
+    medium: "$6.45",
+    large: "$6.95",
+    id: uuid(),
+    style: {}
+  },
+  {
+    drinkCategory: "Mocha",
+    small: "$5.95",
+    medium: "$6.45",
+    large: "$6.95",
+    id: uuid(),
+    style: {}
+  },
+  {
+    drinkCategory: "Spiced Latte",
+    small: "$5.95",
+    medium: "$6.45",
+    large: "$6.95",
+    id: uuid(),
+    style: {}
+  },
+  {
+    drinkCategory: "Piccolo",
+    small: "$5.95",
+    medium: "$6.45",
+    large: "$6.95",
+    id: uuid(),
+    style: {}
+  },
+  {
+    drinkCategory: "Macciato",
+    small: "$5.95",
+    medium: "$6.45",
+    large: "$6.95",
+    id: uuid(),
+    style: {}
+  },
+];
+
+export const MOCK_COLUMNS = [
+    {
+      id: uuid(),
+      value: "Menu",
+      type: "group",
+      columns: [
+        {
+          id: uuid(),
+          header: "Coffee Classics",
+          accessorKey: "drinkCategory",
+          type: "accessor"
+        },
+        {
+          id: uuid(),
+          header: "Small",
+          accessorKey: "small",
+          type: "accessor"
+        },
+        {
+          id: uuid(),
+          header: "Medium",
+          accessorKey: "medium",
+          type: "accessor"
+        },
+        {
+          id: uuid(),
+          header: "Large",
+          accessorKey: "large",
+          type: "accessor"
+        },
+      ]
+    }
+  ];
+
+export const exampleTableData = {
+  width: "100%",
+  height: "100%",
+  opacity: 1,
+  sections: [ // rename
+    {
+      uniqueId: "",
+      type: "triplePrice3Rows",
+      columns: [
+        {
+            uniqueId: "", // accessor
+            value: "",
+            width: 1,
+            style: {} // header cell styling
+        },
+        {
+            uniqueId: "", // accessor
+            value: "",
+            width: 1,
+            style: {} // header cell styling
+        }
+    ],
+      rows: [],
+    },
+    {
+      uniqueId: "",
+      type: "triplePrice3Rows",
+      columns: [
+        {
+            uniqueId: "", // accessor
+            value: "",
+            width: 1,
+            style: {} // header cell styling
+        },
+        {
+            uniqueId: "", // accessor
+            value: "",
+            width: 1,
+            style: {} // header cell styling
+        }
+    ],
+      rows: [],
+    },
+  ],
+};
+
+export const easilTableData = {
+  columnsMetadata: {
+    triplePrice3Rows: {
+      cellsMetadata: [
+        {
+          width: 7,
+          textFields: [
+            {
+              color: "#000",
+              fontFamily: "Roboto-Bold",
+              borders: {
+                borderBottom: {
+                  color: null,
+                },
+                borderTop: {
+                  color: null,
+                },
+                borderRight: {
+                  color: null,
+                },
+                borderLeft: {
+                  color: null,
+                },
+              },
+              bold: false,
+              boldItalic: false,
+              italic: false,
+              regular: true,
+              fontSize: 36.27,
+              letterSpacing: 0,
+              lineHeight: 1.4,
+              textAlign: "left",
+              textDecoration: "none",
+              fontId: "c9b5a19b-3b18-4bf2-87de-fb7de2ca8214",
+            },
+            {
+              color: "#666",
+              fontFamily: "Roboto-Regular",
+              borders: {
+                borderBottom: {
+                  color: null,
+                },
+                borderTop: {
+                  color: null,
+                },
+                borderRight: {
+                  color: null,
+                },
+                borderLeft: {
+                  color: null,
+                },
+              },
+              bold: false,
+              boldItalic: false,
+              italic: false,
+              regular: true,
+              fontSize: 28.21,
+              letterSpacing: 0,
+              lineHeight: 1.4,
+              textAlign: "left",
+              textDecoration: "none",
+              fontId: "c9b5a19b-3b18-4bf2-87de-fb7de2ca8214",
+            },
+            {
+              color: "#666",
+              fontFamily: "Roboto-Regular",
+              borders: {
+                borderBottom: {
+                  color: null,
+                },
+                borderTop: {
+                  color: null,
+                },
+                borderRight: {
+                  color: null,
+                },
+                borderLeft: {
+                  color: null,
+                },
+              },
+              bold: false,
+              boldItalic: false,
+              italic: false,
+              regular: true,
+              fontSize: 28.21,
+              letterSpacing: 0,
+              lineHeight: 1.4,
+              textAlign: "left",
+              textDecoration: "none",
+              fontId: "c9b5a19b-3b18-4bf2-87de-fb7de2ca8214",
+            },
+          ],
+        },
+        {
+          width: 1,
+          textFields: [
+            {
+              color: "#000",
+              fontFamily: "Roboto-Bold",
+              borders: {
+                borderBottom: {
+                  color: null,
+                },
+                borderTop: {
+                  color: null,
+                },
+                borderRight: {
+                  color: null,
+                },
+                borderLeft: {
+                  color: null,
+                },
+              },
+              bold: false,
+              boldItalic: false,
+              italic: false,
+              regular: true,
+              fontSize: 36.27,
+              letterSpacing: 0,
+              lineHeight: 1.4,
+              textAlign: "right",
+              textDecoration: "none",
+              fontId: "c9b5a19b-3b18-4bf2-87de-fb7de2ca8214",
+            },
+            {
+              color: "#666",
+              fontFamily: "Roboto-Regular",
+              borders: {
+                borderBottom: {
+                  color: null,
+                },
+                borderTop: {
+                  color: null,
+                },
+                borderRight: {
+                  color: null,
+                },
+                borderLeft: {
+                  color: null,
+                },
+              },
+              bold: false,
+              boldItalic: false,
+              italic: false,
+              regular: true,
+              fontSize: 28.21,
+              letterSpacing: 0,
+              lineHeight: 1.4,
+              textAlign: "right",
+              textDecoration: "none",
+              fontId: "c9b5a19b-3b18-4bf2-87de-fb7de2ca8214",
+            },
+            {
+              color: "#666",
+              fontFamily: "Roboto-Regular",
+              borders: {
+                borderBottom: {
+                  color: null,
+                },
+                borderTop: {
+                  color: null,
+                },
+                borderRight: {
+                  color: null,
+                },
+                borderLeft: {
+                  color: null,
+                },
+              },
+              bold: false,
+              boldItalic: false,
+              italic: false,
+              regular: true,
+              fontSize: 28.21,
+              letterSpacing: 0,
+              lineHeight: 1.4,
+              textAlign: "right",
+              textDecoration: "none",
+              fontId: "c9b5a19b-3b18-4bf2-87de-fb7de2ca8214",
+            },
+          ],
+        },
+        {
+          width: 1,
+          textFields: [
+            {
+              color: "#000",
+              fontFamily: "Roboto-Bold",
+              borders: {
+                borderBottom: {
+                  color: null,
+                },
+                borderTop: {
+                  color: null,
+                },
+                borderRight: {
+                  color: null,
+                },
+                borderLeft: {
+                  color: null,
+                },
+              },
+              bold: false,
+              boldItalic: false,
+              italic: false,
+              regular: true,
+              fontSize: 36.27,
+              letterSpacing: 0,
+              lineHeight: 1.4,
+              textAlign: "right",
+              textDecoration: "none",
+              fontId: "c9b5a19b-3b18-4bf2-87de-fb7de2ca8214",
+            },
+            {
+              color: "#666",
+              fontFamily: "Roboto-Regular",
+              borders: {
+                borderBottom: {
+                  color: null,
+                },
+                borderTop: {
+                  color: null,
+                },
+                borderRight: {
+                  color: null,
+                },
+                borderLeft: {
+                  color: null,
+                },
+              },
+              bold: false,
+              boldItalic: false,
+              italic: false,
+              regular: true,
+              fontSize: 28.21,
+              letterSpacing: 0,
+              lineHeight: 1.4,
+              textAlign: "right",
+              textDecoration: "none",
+              fontId: "c9b5a19b-3b18-4bf2-87de-fb7de2ca8214",
+            },
+            {
+              color: "#666",
+              fontFamily: "Roboto-Regular",
+              borders: {
+                borderBottom: {
+                  color: null,
+                },
+                borderTop: {
+                  color: null,
+                },
+                borderRight: {
+                  color: null,
+                },
+                borderLeft: {
+                  color: null,
+                },
+              },
+              bold: false,
+              boldItalic: false,
+              italic: false,
+              regular: true,
+              fontSize: 28.21,
+              letterSpacing: 0,
+              lineHeight: 1.4,
+              textAlign: "right",
+              textDecoration: "none",
+              fontId: "c9b5a19b-3b18-4bf2-87de-fb7de2ca8214",
+            },
+          ],
+        },
+        {
+          width: 1,
+          textFields: [
+            {
+              color: "#000",
+              fontFamily: "Roboto-Bold",
+              borders: {
+                borderBottom: {
+                  color: null,
+                },
+                borderTop: {
+                  color: null,
+                },
+                borderRight: {
+                  color: null,
+                },
+                borderLeft: {
+                  color: null,
+                },
+              },
+              bold: false,
+              boldItalic: false,
+              italic: false,
+              regular: true,
+              fontSize: 36.27,
+              letterSpacing: 0,
+              lineHeight: 1.4,
+              textAlign: "right",
+              textDecoration: "none",
+              fontId: "c9b5a19b-3b18-4bf2-87de-fb7de2ca8214",
+            },
+            {
+              color: "#666",
+              fontFamily: "Roboto-Regular",
+              borders: {
+                borderBottom: {
+                  color: null,
+                },
+                borderTop: {
+                  color: null,
+                },
+                borderRight: {
+                  color: null,
+                },
+                borderLeft: {
+                  color: null,
+                },
+              },
+              bold: false,
+              boldItalic: false,
+              italic: false,
+              regular: true,
+              fontSize: 28.21,
+              letterSpacing: 0,
+              lineHeight: 1.4,
+              textAlign: "right",
+              textDecoration: "none",
+              fontId: "c9b5a19b-3b18-4bf2-87de-fb7de2ca8214",
+            },
+            {
+              color: "#666",
+              fontFamily: "Roboto-Regular",
+              borders: {
+                borderBottom: {
+                  color: null,
+                },
+                borderTop: {
+                  color: null,
+                },
+                borderRight: {
+                  color: null,
+                },
+                borderLeft: {
+                  color: null,
+                },
+              },
+              bold: false,
+              boldItalic: false,
+              italic: false,
+              regular: true,
+              fontSize: 28.21,
+              letterSpacing: 0,
+              lineHeight: 1.4,
+              textAlign: "right",
+              textDecoration: "none",
+              fontId: "c9b5a19b-3b18-4bf2-87de-fb7de2ca8214",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  height: 209,
+  opacity: 1,
+  rows: [
+    {
+      id: "91c6feaf-efd7-4a4d-b22a-c9cf510d4091",
+      rowTypeCode: "triplePrice3Rows",
+      cells: [
+        {
+          id: "707712e5-a9e0-469e-bf2e-59c0ae9e82c5",
+          textFields: [
+            {
+              height: 51,
+              value: "Menu item",
+              id: "be84f6c1-8ed7-4ae4-bcf3-f1841848942b",
+            },
+            {
+              height: 79,
+              value: "subtext",
+              color: "#666",
+              id: "1dc1798f-c629-43f0-9b28-dbeb2ecb6366",
+            },
+            {
+              height: 79,
+              value: "subtext",
+              color: "#666",
+              id: "b529a45b-43c7-4be4-82b2-aadb78b7da9c",
+            },
+          ],
+        },
+        {
+          id: "e9e7d072-e3ac-4f38-b59c-8c8207a8a891",
+          textFields: [
+            {
+              height: 51,
+              value: "$0",
+              id: "21027cde-c6c4-4b61-8db6-f9331be7728a",
+            },
+            {
+              height: 79,
+              value: "tax incl.",
+              color: "#666",
+              id: "9abc1bc9-88bd-4fb8-980c-68689c0a3691",
+            },
+            {
+              height: 79,
+              value: "tax incl.",
+              color: "#666",
+              id: "1ab080f1-09ad-4267-ac74-e8b4b0928aa1",
+            },
+          ],
+        },
+        {
+          id: "251b7bbd-5334-4726-be2a-e44df21375a3",
+          textFields: [
+            {
+              height: 51,
+              value: "$0",
+              id: "2d7a9752-705a-4ebf-9763-f36663a5914c",
+            },
+            {
+              height: 79,
+              value: "tax incl.",
+              color: "#666",
+              id: "bc40e437-2a8e-4d25-81aa-0bd90b3439ae",
+            },
+            {
+              height: 79,
+              value: "tax incl.",
+              color: "#666",
+              id: "370815af-d3e1-4aa1-9fff-ffc9c21a0a7d",
+            },
+          ],
+        },
+        {
+          id: "66e60fbc-93e0-4ae7-8eeb-41c96dffcd71",
+          textFields: [
+            {
+              height: 51,
+              value: "$0",
+              id: "538e23ef-938e-4b0b-9424-d5da32460c5c",
+            },
+            {
+              height: 79,
+              value: "tax incl.",
+              color: "#666",
+              id: "07051226-3201-41fe-b638-590ae389604e",
+            },
+            {
+              height: 79,
+              value: "tax incl.",
+              color: "#666",
+              id: "22c5dcac-27c8-4b78-b8ff-5c6abbdd6e1c",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  width: 806,
+  uniqueId: "145b9df1-3541-4ee1-9cf0-b8105f035df3",
+};
