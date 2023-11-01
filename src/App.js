@@ -23,13 +23,28 @@ const convertColumnsToMenuColumns = columns => {
 }
 
 const menuColumns = convertColumnsToMenuColumns(MOCK_COLUMNS);
-const initState = { columns: menuColumns, data: MOCK_MENU_DATA }
+const updatedMenuData = MOCK_MENU_DATA.map(row => ({
+    ...row,
+    cells: Object.keys(row).map((id, index) => ({
+      id: id,
+      value: row[id],
+      index: index,
+      style: {}
+    }))
+  }));
+const initState = { columns: menuColumns, data: updatedMenuData }
 
 const App = () => {
-  const [table, setTable] = useState([initState]);
+  const [tables, setTables] = useState([initState]);
+  const [selectedCells, setSelectedCells] = useState({});
+
   const handleAddNewTable = () => {
-    const updatedTable = table.concat(initState)
-    setTable(updatedTable)
+    const updatedRows = initState.data.map(row => ({
+      ...row,
+      id: uuid()
+    }))
+    const updatedTable = tables.concat({ ...initState, data: updatedRows, id: uuid() });
+    setTables(updatedTable)
   }
   const handleAlternateRowStyling = () => {
     const data = initState.data;
@@ -46,21 +61,35 @@ const App = () => {
       ...initState,
       data
     };
-    setTable([updatedState]);
+    setTables([updatedState]);
+  }
+
+  const handleApplyBackgroundColor = () => {
+    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    Object.keys(selectedCells).forEach(id => document.getElementById(id).style.backgroundColor = randomColor)
+    setSelectedCells({})
   }
 
   return (
     <div className="wrapper">
       <div className="tableWrapper">
-        {table.map(({ columns, data }) => (
+        {tables.map(({ columns, data, id }) => (
           <MultifeaturedTable
             columns={columns}
             data={data}
+            selectedCells={selectedCells}
+            setSelectedCells={setSelectedCells}
+            id={id}
           />
         ))}
       </div>
-      <button onClick={() => handleAlternateRowStyling()}>Add Alternate Row Color</button>
-      <button onClick={() => handleAddNewTable()}>Add New Table</button>
+      <div className="actionButtons">
+        <button onClick={() => handleAlternateRowStyling()}>Add Alternate Row Color</button>
+        <button onClick={() => handleAddNewTable()}>Add New Table</button>
+        {Object.keys(selectedCells).length > 0 && (
+          <button onClick={() => handleApplyBackgroundColor()}>Apply random color</button>
+        )}
+      </div>
     </div>
   );
 }

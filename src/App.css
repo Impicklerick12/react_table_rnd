@@ -15,6 +15,7 @@
 .tableWrapper {
     border: solid 2px var(--easil-blue);
     border-radius: 8px;
+    width: calc(100% / 2);
 }
 
 .resizer {
@@ -293,4 +294,9 @@ input[type='number'] {
     width: 100%;
     box-sizing: border-box;
     padding-right: 25px;
+}
+
+.actionButtons {
+    display: flex;
+    flex-direction: column;
 }

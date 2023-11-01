@@ -509,56 +509,56 @@ export const MOCK_MENU_DATA = [
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    id: uuid(),
-    style: {}
+    // id: uuid(),
+    // style: {}
   },
   {
     drinkCategory: "Long Black",
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    id: uuid(),
-    style: {}
+    // id: uuid(),
+    // style: {}
   },
   {
     drinkCategory: "Latte",
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    id: uuid(),
-    style: {}
+    // id: uuid(),
+    // style: {}
   },
   {
     drinkCategory: "Mocha",
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    id: uuid(),
-    style: {}
+    // id: uuid(),
+    // style: {}
   },
   {
     drinkCategory: "Spiced Latte",
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    id: uuid(),
-    style: {}
+    // id: uuid(),
+    // style: {}
   },
   {
     drinkCategory: "Piccolo",
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    id: uuid(),
-    style: {}
+    // id: uuid(),
+    // style: {}
   },
   {
     drinkCategory: "Macciato",
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    id: uuid(),
-    style: {}
+    // id: uuid(),
+    // style: {}
   },
 ];
 

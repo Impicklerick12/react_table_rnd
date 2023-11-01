@@ -15,7 +15,6 @@ const MultifeaturedTable = (props) => {
   const [sorting, setSorting] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [columnVisibility, setColumnVisibility] = useState({});
-  const [selectedCells, setSelectedCells] = useState([]);
 
   const table = useReactTable({
     data,
@@ -27,6 +26,7 @@ const MultifeaturedTable = (props) => {
     // },
     enableColumnResizing: true,
     columnResizeMode: "onChange",
+    // onColumnSizingChange: handleColumnSizeChange,
     // onSortingChange: setSorting,
     // onGlobalFilterChange: setGlobalFilter,
     // onColumnVisibilityChange: setColumnVisibility,
@@ -35,26 +35,33 @@ const MultifeaturedTable = (props) => {
     // getPaginationRowModel: getPaginationRowModel(),
     // getSortedRowModel: getSortedRowModel(),
   });
+  const headerGroups = table.getHeaderGroups();
+  const tableRows = table.getRowModel().rows;
+  // console.log(table.getState())
+  // console.log(table.getRowModel().rows)
+  // console.log(props.selectedCells)
 
-    const headerGroups = table.getHeaderGroups();
-    const tableRows = table.getRowModel().rows;
-    const generateCell = tableCell => {
+
+    const generateCell = (tableCell) => {
         const cell = tableCell.column.columnDef.cell;
         const cellContext = tableCell.getContext();
-        const cellId = cellContext.cell.id;
-        const cellStyle = cellContext.row.original.style;
+        const rowData = cellContext.row.original;
+        const cellStyle = rowData.style;
+        const cellId = `${cellContext.cell.id}_${rowData.id}`;
+        const isCellSelected = Object.keys(props.selectedCells).includes(cellId);
 
         return (
-            <td 
-                key={cellId} 
-                onClick={() => handleSelectedCells(cellId)} 
-                data-is-selected={selectedCells.includes(cellId)}
-                style={cellStyle}
-            >
-                {flexRender(cell, cellContext)}
-            </td>
-        )
-    }
+        <td
+            key={cellId}
+            id={cellId}
+            onClick={() => handleSelectedCells(cellId, cellContext)}
+            data-is-selected={isCellSelected}
+            style={cellStyle}
+        >
+            {flexRender(cell, cellContext)}
+        </td>
+        );
+    };
 
   const getContainerCssClass = () => {
     if (props.containerCssClass) return props.containerCssClass;
@@ -73,12 +80,21 @@ const MultifeaturedTable = (props) => {
     return classes.join(" ");
   };
 
-  const handleSelectedCells = selectedId => {
-    if (selectedCells.includes(selectedId)) {
-        setSelectedCells(selectedCells.filter(id => id !== selectedId));
+  const handleSelectedCells = (selectedId, cellContext) => {
+    if (Object.keys(props.selectedCells).includes(selectedId)) {
+      const updatedSelectedCells = {...props.selectedCells}
+      delete updatedSelectedCells[selectedId];
+        props.setSelectedCells(updatedSelectedCells);
         return;
     }
-    setSelectedCells(selectedCells.concat(selectedId));
+    props.setSelectedCells({
+      ...props.selectedCells,
+      [selectedId]: {
+        rowId: cellContext.row.id,
+        columnkey: cellContext.column.id,
+        columnId: cellContext.row.original.id
+      }
+    });
   }
 
   return (
@@ -125,7 +141,7 @@ const MultifeaturedTable = (props) => {
         </thead>
         <tbody>
           {tableRows.map((row) => (
-            <tr key={row.id}>
+            <tr key={row.id} >
               {row.getVisibleCells().map((cell) => generateCell(cell))}
             </tr>
           ))}
