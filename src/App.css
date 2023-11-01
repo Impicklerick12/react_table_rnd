@@ -15,7 +15,7 @@
 .tableWrapper {
     border: solid 2px var(--easil-blue);
     border-radius: 8px;
-    width: calc(100% / 2);
+    /* width: calc(100% / 2); */
 }
 
 .resizer {

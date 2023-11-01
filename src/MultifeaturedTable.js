@@ -19,11 +19,14 @@ const MultifeaturedTable = (props) => {
   const table = useReactTable({
     data,
     columns,
-    // state: {
-    //   sorting,
-    //   globalFilter,
-    //   columnVisibility,
-    // },
+    state: {
+      // sorting,
+      // globalFilter,
+      // columnVisibility,
+      // columnSizing: {
+      //   "drinkCategory": 20
+      // }
+    },
     enableColumnResizing: true,
     columnResizeMode: "onChange",
     // onColumnSizingChange: handleColumnSizeChange,
@@ -37,7 +40,7 @@ const MultifeaturedTable = (props) => {
   });
   const headerGroups = table.getHeaderGroups();
   const tableRows = table.getRowModel().rows;
-  // console.log(table.getState())
+  console.log(table.getState())
   // console.log(table.getRowModel().rows)
   // console.log(props.selectedCells)
 
@@ -46,7 +49,6 @@ const MultifeaturedTable = (props) => {
         const cell = tableCell.column.columnDef.cell;
         const cellContext = tableCell.getContext();
         const rowData = cellContext.row.original;
-        const cellStyle = rowData.style;
         const cellId = `${cellContext.cell.id}_${rowData.id}`;
         const isCellSelected = Object.keys(props.selectedCells).includes(cellId);
 
@@ -56,7 +58,6 @@ const MultifeaturedTable = (props) => {
             id={cellId}
             onClick={() => handleSelectedCells(cellId, cellContext)}
             data-is-selected={isCellSelected}
-            style={cellStyle}
         >
             {flexRender(cell, cellContext)}
         </td>
@@ -141,7 +142,7 @@ const MultifeaturedTable = (props) => {
         </thead>
         <tbody>
           {tableRows.map((row) => (
-            <tr key={row.id} >
+            <tr key={row.id} style={row.original.style}>
               {row.getVisibleCells().map((cell) => generateCell(cell))}
             </tr>
           ))}

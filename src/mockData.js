@@ -509,92 +509,134 @@ export const MOCK_MENU_DATA = [
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    // id: uuid(),
-    // style: {}
+    id: uuid(),
+    style: {}
   },
   {
     drinkCategory: "Long Black",
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    // id: uuid(),
-    // style: {}
+    id: uuid(),
+    style: {}
   },
   {
     drinkCategory: "Latte",
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    // id: uuid(),
-    // style: {}
+    id: uuid(),
+    style: {}
   },
   {
     drinkCategory: "Mocha",
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    // id: uuid(),
-    // style: {}
+    id: uuid(),
+    style: {}
   },
   {
     drinkCategory: "Spiced Latte",
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    // id: uuid(),
-    // style: {}
+    id: uuid(),
+    style: {}
   },
   {
     drinkCategory: "Piccolo",
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    // id: uuid(),
-    // style: {}
+    id: uuid(),
+    style: {}
   },
   {
     drinkCategory: "Macciato",
     small: "$5.95",
     medium: "$6.45",
     large: "$6.95",
-    // id: uuid(),
-    // style: {}
+    id: uuid(),
+    style: {}
   },
 ];
 
 export const MOCK_COLUMNS = [
-    {
-      id: uuid(),
-      value: "Menu",
-      type: "group",
-      columns: [
-        {
-          id: uuid(),
-          header: "Coffee Classics",
-          accessorKey: "drinkCategory",
-          type: "accessor"
-        },
-        {
-          id: uuid(),
-          header: "Small",
-          accessorKey: "small",
-          type: "accessor"
-        },
-        {
-          id: uuid(),
-          header: "Medium",
-          accessorKey: "medium",
-          type: "accessor"
-        },
-        {
-          id: uuid(),
-          header: "Large",
-          accessorKey: "large",
-          type: "accessor"
-        },
-      ]
-    }
-  ];
+  {
+    id: uuid(),
+    value: "Menu",
+    type: "group",
+    columns: [
+      {
+        id: uuid(),
+        header: "Coffee Classics",
+        accessorKey: "drinkCategory",
+        type: "accessor",
+        width: 7
+      },
+      {
+        id: uuid(),
+        header: "Small",
+        accessorKey: "small",
+        type: "accessor",
+        width: 1
+      },
+      {
+        id: uuid(),
+        header: "Medium",
+        accessorKey: "medium",
+        type: "accessor",
+        width: 1
+      },
+      {
+        id: uuid(),
+        header: "Large",
+        accessorKey: "large",
+        width: 1
+      },
+    ],
+  },
+];
+
+export const TWO_COLUMNS = [
+  {
+    id: uuid(),
+    value: "Starters",
+    type: "group",
+    columns: [
+      {
+        id: uuid(),
+        header: "",
+        accessorKey: "description",
+        type: "accessor",
+      },
+      {
+        id: uuid(),
+        header: "",
+        accessorKey: "price",
+        type: "accessor",
+      },
+    ],
+  },
+];
+
+export const TWO_COLUMNS_DATA = [
+  {
+    description: "Garlic Bread\nadd Cheese +2\nadd Bacon & Cheese + 3",
+    price: "7"
+  },
+  {
+    description: "Oysters Kilpatrick\nBacon, sauce and a bunch of other stuff",
+    small: "$19"
+  },
+]
+
+export const MOCK_MENU = {
+  colums: MOCK_COLUMNS,
+  data: MOCK_MENU_DATA
+}
+
 
 export const exampleTableData = {
   width: "100%",
