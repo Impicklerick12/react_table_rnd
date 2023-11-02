@@ -2,26 +2,36 @@ import React, { useState } from "react";
 import MultifeaturedTable from "./MultifeaturedTable";
 import { createColumnHelper } from '@tanstack/react-table'
 import './App.css';
-import { MOCK_MENU_DATA, MOCK_COLUMNS, TWO_COLUMNS, TWO_COLUMNS_DATA } from "./mockData";
+import { MOCK_MENU_DATA, MOCK_COLUMNS, TWO_COLUMNS, TWO_COLUMNS_DATA, REAL_ESTATE_COLUMNS, REAL_ESTATE_DATA } from "./mockData";
 import { v4 as uuid } from 'uuid';
 
 const TABLE_WIDTH = 1000; // would come from design data
 
 const columnHelper = createColumnHelper();
+// the below should be updated to handle multiple nested column groups
+// currently only handles one group
+// i.e. group > group > accessor.
 const convertColumnsToMenuColumns = columns => {
-  return columns.map(columnGroup => {
-    return columnHelper.group({
-      id: columnGroup.id || uuid(),
-      header: () => <span>{columnGroup.value}</span>,
-      columns: columnGroup.columns.map(column => {
-        return columnHelper.accessor(column.accessorKey, {
-          header: () => <span>{column.header}</span>,
-          cell: info => <span>{info.getValue()}</span>,
-          footer: props => props.column.id,
-          size: (column.width / 10) * TABLE_WIDTH // determine column width based on element column data
-        });
-      }),
+  const generateAccessorColumns = column => {
+    return columnHelper.accessor(column.accessorKey, {
+      header: () => <span>{column.header}</span>,
+      cell: info => <span>{info.getValue()}</span>,
+      footer: props => props.column.id,
+      size: column.width ? (column.width / 10) * TABLE_WIDTH : "auto" // determine column width based on element column data
     });
+  }
+  
+  return columns.map(column => {
+    if (column.type === "group") {
+      return columnHelper.group({
+        id: column.id || uuid(),
+        header: () => <span>{column.value}</span>,
+        // see comment above function
+        columns: column.columns.map(column => generateAccessorColumns(column))
+      });
+    } else if (column.type === "accessor") {
+      return generateAccessorColumns(column)
+    }
   });
 }
 // NOTE; Any above span tags would be replaced by custom cell containers, rendering Textbox/UncontrolledContentEditable component
@@ -44,9 +54,34 @@ const App = () => {
   }
 
   const handleAddDifferentTable = () => {
-    const menuColumns = convertColumnsToMenuColumns(TWO_COLUMNS);
-    const tableState = { columns: menuColumns, data: TWO_COLUMNS_DATA };
-    const updatedTables = tables.concat(tableState);
+    const originalTable = {
+      columns: MOCK_COLUMNS,
+      data: MOCK_MENU_DATA
+    }
+    const twoColumnTable = { 
+      columns: TWO_COLUMNS, 
+      data: TWO_COLUMNS_DATA
+    };
+    const realEstateTable = { 
+      columns: REAL_ESTATE_COLUMNS, 
+      data: REAL_ESTATE_DATA
+    };
+  
+    const tablesArr = [originalTable, twoColumnTable, realEstateTable];
+    const getRandomTable = () => {
+      return tablesArr[(Math.floor(Math.random() * tablesArr.length))];
+    }
+    const randomTable = getRandomTable();
+    const uniqueRandomTable = {
+      columns: convertColumnsToMenuColumns(randomTable.columns),
+      data: randomTable.data.map(row => ({
+        ...row,
+        id: uuid()
+      })),
+      id: uuid()
+    }
+
+    const updatedTables = tables.concat(uniqueRandomTable);
     setTables(updatedTables)
   }
 

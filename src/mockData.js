@@ -610,12 +610,14 @@ export const TWO_COLUMNS = [
         header: "",
         accessorKey: "description",
         type: "accessor",
+        width: 9
       },
       {
         id: uuid(),
         header: "",
         accessorKey: "price",
         type: "accessor",
+        width: 1
       },
     ],
   },
@@ -624,13 +626,131 @@ export const TWO_COLUMNS = [
 export const TWO_COLUMNS_DATA = [
   {
     description: "Garlic Bread\nadd Cheese +2\nadd Bacon & Cheese + 3",
-    price: "7"
+    price: "$7.00"
   },
   {
     description: "Oysters Kilpatrick\nBacon, sauce and a bunch of other stuff",
-    small: "$19"
+    price: "$19.00"
   },
 ]
+
+export const REAL_ESTATE_DATA = [
+  {
+    address: "123 Station St, Suburb, 2000",
+    investment: "$500,000",
+    enquiries: "555",
+    inspections: "55",
+    bidders: "5",
+    price: "Sold at auction",
+    date: "12/12/2022",
+  },
+  {
+    address: "123 Station St, Suburb, 2000",
+    investment: "$500,000",
+    enquiries: "555",
+    inspections: "55",
+    bidders: "5",
+    price: "Sold at auction",
+    date: "12/12/2022",
+  },
+  {
+    address: "123 Station St, Suburb, 2000",
+    investment: "$500,000",
+    enquiries: "555",
+    inspections: "55",
+    bidders: "5",
+    price: "Sold at auction",
+    date: "12/12/2022",
+  },
+  {
+    address: "123 Station St, Suburb, 2000",
+    investment: "$500,000",
+    enquiries: "555",
+    inspections: "55",
+    bidders: "5",
+    price: "Sold at auction",
+    date: "12/12/2022",
+  },
+  {
+    address: "123 Station St, Suburb, 2000",
+    investment: "$500,000",
+    enquiries: "555",
+    inspections: "55",
+    bidders: "5",
+    price: "Sold at auction",
+    date: "12/12/2022",
+  },
+  {
+    address: "123 Station St, Suburb, 2000",
+    investment: "$500,000",
+    enquiries: "555",
+    inspections: "55",
+    bidders: "5",
+    price: "Sold at auction",
+    date: "12/12/2022",
+  },
+  {
+    address: "123 Station St, Suburb, 2000",
+    investment: "$500,000",
+    enquiries: "555",
+    inspections: "55",
+    bidders: "5",
+    price: "Sold at auction",
+    date: "12/12/2022",
+  },
+]
+
+export const REAL_ESTATE_COLUMNS = [
+    {
+      id: uuid(),
+      header: "ADDRESS",
+      accessorKey: "address",
+      type: "accessor",
+      width: 2
+    },
+    {
+      id: uuid(),
+      header: "MERKETTING INVESTMENT",
+      accessorKey: "investment",
+      type: "accessor",
+      width: 1
+    },
+    {
+      id: uuid(),
+      header: "ENQUIRIES",
+      accessorKey: "enquiries",
+      type: "accessor",
+      width: 1
+    },
+    {
+      id: uuid(),
+      header: "INSPECTIONS",
+      accessorKey: "inspections",
+      type: "accessor",
+      width: 1
+    },
+    {
+      id: uuid(),
+      header: "REGISTERED BIDDERS",
+      accessorKey: "bidders",
+      type: "accessor",
+      width: 1
+    },
+    {
+      id: uuid(),
+      header: "SALE PRICE",
+      accessorKey: "price",
+      type: "accessor",
+      width: 1
+    },
+    {
+      id: uuid(),
+      header: "SALE DATE",
+      accessorKey: "date",
+      type: "accessor",
+      width: 1
+    },
+];
 
 export const MOCK_MENU = {
   colums: MOCK_COLUMNS,
