@@ -43,15 +43,7 @@ const initState = { columns: menuColumns, data: MOCK_MENU_DATA }
 const App = () => {
   const [tables, setTables] = useState([initState]);
   const [selectedCells, setSelectedCells] = useState({});
-
-  const handleAddNewTable = () => {
-    const updatedRows = initState.data.map(row => ({
-      ...row,
-      id: uuid()
-    }))
-    const updatedTables = tables.concat({ ...initState, data: updatedRows, id: uuid() });
-    setTables(updatedTables)
-  }
+  const [rowColorToggle, setRowColorToggle] = useState(false);
 
   const handleAddDifferentTable = () => {
     const originalTable = {
@@ -85,14 +77,16 @@ const App = () => {
     setTables(updatedTables)
   }
 
-  const handleAlternateRowStyling = () => {
+  const handleToggleRowStyling = () => {
+    setRowColorToggle(!rowColorToggle);
+
     const updatedTables = [...tables].map(table => {
       for (let i = 0; i < table.data.length; i++) {
         // every odd row index
         if (i % 2 === 1) {
           table.data[i].style = {
             ...table.data[0].style,
-            backgroundColor: "lightBlue"
+            backgroundColor: rowColorToggle ? "white" : "lightBlue"
           }
         }
       }
@@ -121,9 +115,8 @@ const App = () => {
         ))}
       </div>
       <div className="actionButtons">
-        <button onClick={() => handleAlternateRowStyling()}>Add Alternate Row Color</button>
-        <button onClick={() => handleAddNewTable()}>Add New Table</button>
-        <button onClick={() => handleAddDifferentTable()}>Add Different Table</button>
+        <button onClick={() => handleToggleRowStyling()}>Toggle Row Color</button>
+        <button onClick={() => handleAddDifferentTable()}>Add New Table</button>
         {Object.keys(selectedCells).length > 0 && (
           <button onClick={() => handleApplyBackgroundColor()}>Apply random color</button>
         )}

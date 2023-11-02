@@ -40,7 +40,7 @@ const MultifeaturedTable = (props) => {
   });
   const headerGroups = table.getHeaderGroups();
   const tableRows = table.getRowModel().rows;
-  console.log(table.getState())
+  // console.log(table.getState())
   // console.log(table.getRowModel().rows)
   // console.log(props.selectedCells)
 
@@ -63,6 +63,18 @@ const MultifeaturedTable = (props) => {
         </td>
         );
     };
+
+    /* Randomize array in-place using Durstenfeld shuffle algorithm */
+    const shuffleColumns = () => {
+      let columns = table.getAllLeafColumns().map(col => col.id)
+      for (let i = columns.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        let temp = columns[i];
+        columns[i] = columns[j];
+        columns[j] = temp;
+      }
+      table.setColumnOrder(columns)
+    }
 
   const getContainerCssClass = () => {
     if (props.containerCssClass) return props.containerCssClass;
@@ -99,56 +111,59 @@ const MultifeaturedTable = (props) => {
   }
 
   return (
-    <div className={getContainerCssClass()}>
-      <table>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  colSpan={header.colSpan}
-                  style={{ position: "relative", width: header.getSize() }}
-                >
-                  <div
-                    {...{
-                      className: header.column.getCanSort()
-                        ? "cursor-pointer select-none flex-direction-row"
-                        : "flex-direction-row",
-                      onClick: header.column.getToggleSortingHandler(),
-                    }}
+    <>
+      <div className={getContainerCssClass()}>
+        <table>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    style={{ position: "relative", width: header.getSize() }}
                   >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                    <div className="sorting-arrow-container">
-                      <div className={getSortingArrowStyles(header.id)} />
-                    </div>
-                  </div>
-                  {header.column.getCanResize() && (
                     <div
-                      onMouseDown={header.getResizeHandler()}
-                      onTouchStart={header.getResizeHandler()}
-                      className={`resizer ${
-                        header.column.getIsResizing() ? "isResizing" : ""
-                      }`}
-                    ></div>
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {tableRows.map((row) => (
-            <tr key={row.id} style={row.original.style}>
-              {row.getVisibleCells().map((cell) => generateCell(cell))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+                      {...{
+                        className: header.column.getCanSort()
+                          ? "cursor-pointer select-none flex-direction-row"
+                          : "flex-direction-row",
+                        onClick: header.column.getToggleSortingHandler(),
+                      }}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                      <div className="sorting-arrow-container">
+                        <div className={getSortingArrowStyles(header.id)} />
+                      </div>
+                    </div>
+                    {header.column.getCanResize() && (
+                      <div
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className={`resizer ${
+                          header.column.getIsResizing() ? "isResizing" : ""
+                        }`}
+                      ></div>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {tableRows.map((row) => (
+              <tr key={row.id} style={row.original.style}>
+                {row.getVisibleCells().map((cell) => generateCell(cell))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <button onClick={() => shuffleColumns()}>Shuffle Column Order</button>
+    </>
   );
 };
 
