@@ -101,6 +101,20 @@ const App = () => {
     setSelectedCells({})
   }
 
+  const generateRowMetaData = data => data.reduce((acc, row) => {
+    // formatting row cells into indivual objects
+    // thinking is to apply styling to this object
+    const cells = Object.keys(row)
+      .filter(key => !["id", "style"].includes(key))
+      .map(key => ({
+        id: key,
+        value: row[key],
+        style: {}
+      }))
+    acc.push(cells)
+    return acc;
+  }, []);
+
   return (
     <div className="wrapper">
       <div className="tableWrapper" style={{ width: `${TABLE_WIDTH}px` }}>
@@ -111,6 +125,7 @@ const App = () => {
             selectedCells={selectedCells}
             setSelectedCells={setSelectedCells}
             id={id}
+            rowMetaData={generateRowMetaData(data)}
           />
         ))}
       </div>

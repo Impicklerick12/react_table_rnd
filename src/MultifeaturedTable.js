@@ -51,6 +51,8 @@ const MultifeaturedTable = (props) => {
         const rowData = cellContext.row.original;
         const cellId = `${cellContext.cell.id}_${rowData.id}`;
         const isCellSelected = Object.keys(props.selectedCells).includes(cellId);
+        const [index, accessor] = cellContext.cell.id.split("_");
+        const style = props.rowMetaData[index].find(row => row.id === accessor).style;
 
         return (
         <td
@@ -58,6 +60,7 @@ const MultifeaturedTable = (props) => {
             id={cellId}
             onClick={() => handleSelectedCells(cellId, cellContext)}
             data-is-selected={isCellSelected}
+            style={style}
         >
             {flexRender(cell, cellContext)}
         </td>
