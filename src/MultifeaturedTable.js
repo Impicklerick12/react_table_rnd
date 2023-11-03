@@ -8,13 +8,26 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import PropTypes from "prop-types";
+import { useDrag, useDrop } from 'react-dnd';
 
 const MultifeaturedTable = (props) => {
   const columns = useMemo(() => props.columns, [props.columns]);
-  const data = useMemo(() => props.data, [props.data]);
+  const memoData = useMemo(() => props.data, [props.data]);
+  const [data, setData] = useState(memoData);
   const [sorting, setSorting] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [columnVisibility, setColumnVisibility] = useState({});
+
+  const moveRow = (dragIndex, hoverIndex) => {
+    const updatedData = [...data];
+    if (dragIndex) {
+      debugger
+      const draggedRow = updatedData[dragIndex];
+      updatedData.splice(dragIndex, 1);
+      updatedData.splice(hoverIndex, 0, draggedRow)
+    }
+    setData([...updatedData])
+  }
 
   const table = useReactTable({
     data,
@@ -44,8 +57,71 @@ const MultifeaturedTable = (props) => {
   // console.log(table.getRowModel().rows)
   // console.log(props.selectedCells)
 
+  const DraggableRow = ({ index, row }) => {
+    const dropRef = React.useRef(null)
+    const dragRef = React.useRef(null)
 
-    const generateCell = (tableCell) => {
+    const [, drop] = useDrop({
+      accept: 'row',
+      hover(item, monitor) {
+        if (!dropRef.current) {
+          return
+        }
+        const dragIndex = item.index
+        const hoverIndex = index
+        // Don't replace items with themselves
+        if (dragIndex === hoverIndex) {
+          return
+        }
+        // Determine rectangle on screen
+        const hoverBoundingRect = dropRef.current.getBoundingClientRect()
+        // Get vertical middle
+        const hoverMiddleY =
+          (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
+        // Determine mouse position
+        const clientOffset = monitor.getClientOffset()
+        // Get pixels to the top
+        const hoverClientY = clientOffset.y - hoverBoundingRect.top
+  
+        // Only perform the move when the mouse has crossed half of the items height
+        // When dragging downwards, only move when the cursor is below 50%
+        // When dragging upwards, only move when the cursor is above 50%
+
+        // Dragging downwards
+        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+          return
+        }
+        // Dragging upwards
+        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+          return
+        }
+
+        moveRow(dragIndex, hoverIndex)
+        item.index = hoverIndex
+      },
+    })
+
+    const [{ isDragging }, drag, preview] = useDrag({
+      type: 'row',
+      collect: monitor => ({
+        isDragging: monitor.isDragging(),
+      }),
+    })
+
+    const opacity = isDragging ? 0 : 1
+
+    preview(drop(dropRef))
+    drag(dragRef)
+
+    return (
+      <tr className="tableRow" key={row.id} ref={dropRef} style={row.original.style} data-is-dragging={isDragging}>
+        {row.getVisibleCells().map((cell) => generateCell(cell, dragRef))}
+      </tr>
+    )
+  }
+
+
+    const generateCell = (tableCell, dragRef) => {
         const cell = tableCell.column.columnDef.cell;
         const cellContext = tableCell.getContext();
         const rowData = cellContext.row.original;
@@ -60,7 +136,8 @@ const MultifeaturedTable = (props) => {
             id={cellId}
             onClick={() => handleSelectedCells(cellId, cellContext)}
             data-is-selected={isCellSelected}
-            style={style}
+            style={{ ...style, cursor: "move" }}
+            ref={dragRef}
         >
             {flexRender(cell, cellContext)}
         </td>
@@ -157,10 +234,8 @@ const MultifeaturedTable = (props) => {
             ))}
           </thead>
           <tbody>
-            {tableRows.map((row) => (
-              <tr key={row.id} style={row.original.style}>
-                {row.getVisibleCells().map((cell) => generateCell(cell))}
-              </tr>
+            {tableRows.map((row, index) => (
+              DraggableRow({ index, row, moveRow })
             ))}
           </tbody>
         </table>

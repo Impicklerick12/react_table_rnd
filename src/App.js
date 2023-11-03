@@ -4,6 +4,8 @@ import { createColumnHelper } from '@tanstack/react-table'
 import './App.css';
 import { MOCK_MENU_DATA, MOCK_COLUMNS, TWO_COLUMNS, TWO_COLUMNS_DATA, REAL_ESTATE_COLUMNS, REAL_ESTATE_DATA } from "./mockData";
 import { v4 as uuid } from 'uuid';
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 const TABLE_WIDTH = 1000; // would come from design data
 
@@ -116,27 +118,29 @@ const App = () => {
   }, []);
 
   return (
-    <div className="wrapper">
-      <div className="tableWrapper" style={{ width: `${TABLE_WIDTH}px` }}>
-        {tables.map(({ columns, data, id }) => (
-          <MultifeaturedTable
-            columns={columns}
-            data={data}
-            selectedCells={selectedCells}
-            setSelectedCells={setSelectedCells}
-            id={id}
-            rowMetaData={generateRowMetaData(data)}
-          />
-        ))}
+    <DndProvider backend={HTML5Backend}>
+      <div className="wrapper">
+        <div className="tableWrapper" style={{ width: `${TABLE_WIDTH}px` }}>
+          {tables.map(({ columns, data, id }) => (
+            <MultifeaturedTable
+              columns={columns}
+              data={data}
+              selectedCells={selectedCells}
+              setSelectedCells={setSelectedCells}
+              id={id}
+              rowMetaData={generateRowMetaData(data)}
+            />
+          ))}
+        </div>
+        <div className="actionButtons">
+          <button onClick={() => handleToggleRowStyling()}>Toggle Row Color</button>
+          <button onClick={() => handleAddDifferentTable()}>Add New Table</button>
+          {Object.keys(selectedCells).length > 0 && (
+            <button onClick={() => handleApplyBackgroundColor()}>Apply random color</button>
+          )}
+        </div>
       </div>
-      <div className="actionButtons">
-        <button onClick={() => handleToggleRowStyling()}>Toggle Row Color</button>
-        <button onClick={() => handleAddDifferentTable()}>Add New Table</button>
-        {Object.keys(selectedCells).length > 0 && (
-          <button onClick={() => handleApplyBackgroundColor()}>Apply random color</button>
-        )}
-      </div>
-    </div>
+    </DndProvider>
   );
 }
 

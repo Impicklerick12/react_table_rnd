@@ -18,6 +18,11 @@
     /* width: calc(100% / 2); */
 }
 
+.tableRow[data-is-dragging="true"] {
+    border: solid 2px var(--easil-blue);
+    border-radius: 8px;
+}
+
 .resizer {
     position: absolute;
     right: 0;
