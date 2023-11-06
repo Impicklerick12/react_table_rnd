@@ -120,7 +120,7 @@ const App = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="wrapper">
-        <div className="tableWrapper" style={{ width: `${TABLE_WIDTH}px` }}>
+        <div className="tableWrapper">
           {tables.map(({ columns, data, id }) => (
             <MultifeaturedTable
               columns={columns}
@@ -129,6 +129,7 @@ const App = () => {
               setSelectedCells={setSelectedCells}
               id={id}
               rowMetaData={generateRowMetaData(data)}
+              width={TABLE_WIDTH}
             />
           ))}
         </div>

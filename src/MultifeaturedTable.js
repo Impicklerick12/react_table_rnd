@@ -114,7 +114,14 @@ const MultifeaturedTable = (props) => {
     drag(dragRef)
 
     return (
-      <tr className="tableRow" key={row.id} ref={dropRef} style={row.original.style} data-is-dragging={isDragging}>
+      <tr 
+        className="tableRow" 
+        id={row.original.id}
+        key={row.id} 
+        ref={dropRef} 
+        style={row.original.style} 
+        data-is-dragging={isDragging}
+      >
         {row.getVisibleCells().map((cell) => generateCell(cell, dragRef))}
       </tr>
     )
@@ -134,7 +141,7 @@ const MultifeaturedTable = (props) => {
         <td
             key={cellId}
             id={cellId}
-            onClick={() => handleSelectedCells(cellId, cellContext)}
+            onClick={event => handleSelectedCells(event, cellId, cellContext)}
             data-is-selected={isCellSelected}
             style={{ ...style, cursor: "move" }}
             ref={dragRef}
@@ -173,27 +180,68 @@ const MultifeaturedTable = (props) => {
     return classes.join(" ");
   };
 
-  const handleSelectedCells = (selectedId, cellContext) => {
+  const handleSelectedCells = (event, selectedId, cellContext) => {
     if (Object.keys(props.selectedCells).includes(selectedId)) {
       const updatedSelectedCells = {...props.selectedCells}
       delete updatedSelectedCells[selectedId];
-        props.setSelectedCells(updatedSelectedCells);
-        return;
+      
+      props.setSelectedCells(updatedSelectedCells);
+      return;
+    }
+
+    if (event.shiftKey) {
+      props.setSelectedCells({
+        ...props.selectedCells,
+        [selectedId]: {
+          rowId: cellContext.row.id,
+          columnkey: cellContext.column.id,
+          uniqueRowId: cellContext.row.original.id
+        }
+      });
+      return;
     }
     props.setSelectedCells({
-      ...props.selectedCells,
       [selectedId]: {
         rowId: cellContext.row.id,
         columnkey: cellContext.column.id,
-        columnId: cellContext.row.original.id
+        uniqueRowId: cellContext.row.original.id
       }
     });
+  }
+
+  const isSingleRowSelected = (() => {
+    const selectedCellsValues = Object.values(props.selectedCells);
+
+    if (!selectedCellsValues.length) return;
+
+    const isSameRowId = array => {
+      const rowdId = array[0].uniqueRowId;
+      return array.every(cell => cell.uniqueRowId === rowdId);
+    }
+    return selectedCellsValues.length === 1 || isSameRowId(selectedCellsValues);
+  })();
+
+  const generateRowDragHandle = () => {
+    const uniqueRowId = Object.values(props.selectedCells)[0].uniqueRowId;
+    const rowElement = document.getElementById(uniqueRowId);
+
+    if (!rowElement) return;
+
+    const rowRect = rowElement.getBoundingClientRect();
+    const handleStyle = {
+      top: rowRect.top
+    };
+
+    return (
+      <div className="dragHandle" style={handleStyle}>DRAG</div>
+    )
   }
 
   return (
     <>
       <div className={getContainerCssClass()}>
-        <table>
+        {isSingleRowSelected && generateRowDragHandle()}
+        <table className="tableElement" style={{ width: `${props.width}px` }}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr key={headerGroup.id}>
