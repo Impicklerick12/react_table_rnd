@@ -52,14 +52,15 @@ const MultifeaturedTable = (props) => {
     // getSortedRowModel: getSortedRowModel(),
   });
   const headerGroups = table.getHeaderGroups();
+  console.log(headerGroups)
   const tableRows = table.getRowModel().rows;
   // console.log(table.getState())
   // console.log(table.getRowModel().rows)
   // console.log(props.selectedCells)
 
   const DraggableRow = ({ index, row }) => {
-    const dropRef = React.useRef(null)
-    const dragRef = React.useRef(null)
+    const dropRef = React.useRef(null);
+    const dragRef = React.useRef(null);
 
     const [, drop] = useDrop({
       accept: 'row',
@@ -118,7 +119,7 @@ const MultifeaturedTable = (props) => {
         className="tableRow" 
         id={row.original.id}
         key={row.id} 
-        ref={dropRef} 
+        ref={dropRef}
         style={row.original.style} 
         data-is-dragging={isDragging}
       >
@@ -195,7 +196,8 @@ const MultifeaturedTable = (props) => {
         [selectedId]: {
           rowId: cellContext.row.id,
           columnkey: cellContext.column.id,
-          uniqueRowId: cellContext.row.original.id
+          uniqueRowId: cellContext.row.original.id,
+          tableId: props.id
         }
       });
       return;
@@ -204,22 +206,24 @@ const MultifeaturedTable = (props) => {
       [selectedId]: {
         rowId: cellContext.row.id,
         columnkey: cellContext.column.id,
-        uniqueRowId: cellContext.row.original.id
+        uniqueRowId: cellContext.row.original.id,
+        tableId: props.id
       }
     });
   }
 
-  const isSingleRowSelected = (() => {
+  const isSingleRowSelected = () => {
     const selectedCellsValues = Object.values(props.selectedCells);
 
     if (!selectedCellsValues.length) return;
-
-    const isSameRowId = array => {
+    
+    const isSameTableRowId = array => {
       const rowdId = array[0].uniqueRowId;
-      return array.every(cell => cell.uniqueRowId === rowdId);
+      const isSameRow = array.every(cell => cell.uniqueRowId === rowdId);
+      return isSameRow && array[0].tableId === props.id
     }
-    return selectedCellsValues.length === 1 || isSameRowId(selectedCellsValues);
-  })();
+    return (selectedCellsValues.length === 1 && selectedCellsValues[0].tableId === props.id) || isSameTableRowId(selectedCellsValues);
+  };
 
   const generateRowDragHandle = () => {
     const uniqueRowId = Object.values(props.selectedCells)[0].uniqueRowId;
@@ -227,9 +231,8 @@ const MultifeaturedTable = (props) => {
 
     if (!rowElement) return;
 
-    const rowRect = rowElement.getBoundingClientRect();
     const handleStyle = {
-      top: rowRect.top
+      top: `${rowElement.offsetTop + 15}px`
     };
 
     return (
@@ -237,10 +240,12 @@ const MultifeaturedTable = (props) => {
     )
   }
 
+  const isRowSelected = isSingleRowSelected();
+
   return (
     <>
       <div className={getContainerCssClass()}>
-        {isSingleRowSelected && generateRowDragHandle()}
+        {isRowSelected && generateRowDragHandle()}
         <table className="tableElement" style={{ width: `${props.width}px` }}>
           <thead>
             {headerGroups.map((headerGroup) => (

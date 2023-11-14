@@ -1,148 +1,215 @@
-import React, { useState } from "react";
-import MultifeaturedTable from "./MultifeaturedTable";
-import { createColumnHelper } from '@tanstack/react-table'
-import './App.css';
-import { MOCK_MENU_DATA, MOCK_COLUMNS, TWO_COLUMNS, TWO_COLUMNS_DATA, REAL_ESTATE_COLUMNS, REAL_ESTATE_DATA } from "./mockData";
-import { v4 as uuid } from 'uuid';
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import React, { Component } from "react";
+import style from "./style.module.css";
+import { TABLE_DATA } from "./data";
 
-const TABLE_WIDTH = 1000; // would come from design data
+const isSameCell = (a, b) => (`${a}` === `${b}`);
+const isReferenceCell = (targetCells, cell) => (
+  Boolean(targetCells.find((targetCell) => isSameCell(targetCell, cell)))
+);
 
-const columnHelper = createColumnHelper();
-// the below should be updated to handle multiple nested column groups
-// currently only handles one group
-// i.e. group > group > accessor.
-const convertColumnsToMenuColumns = columns => {
-  const generateAccessorColumns = column => {
-    return columnHelper.accessor(column.accessorKey, {
-      header: () => <span>{column.header}</span>,
-      cell: info => <span>{info.getValue()}</span>,
-      footer: props => props.column.id,
-      size: column.width ? (column.width / 10) * TABLE_WIDTH : "auto" // determine column width based on element column data
+class Table2 extends Component {
+  constructor(props) {
+    super(props);
+    this.getNumberOfCols = this.getNumberOfCols.bind(this);
+    this.getNumberOfRows = this.getNumberOfRows.bind(this);
+    this.resetRowOrder = this.resetRowOrder.bind(this);
+    this.moveRow = this.moveRow.bind(this);
+    this.computeRowSpan = this.computeRowSpan.bind(this);
+    this.computeColSpan = this.computeColSpan.bind(this);
+    this.duplicateRow = this.duplicateRow.bind(this);
+    this.addRow = this.addRow.bind(this);
+    this.addColumn = this.addColumn.bind(this);
+    this.deleteRow = this.deleteRow.bind(this);
+    this.getMergedCellContent = this.getMergedCellContent.bind(this);
+    this.handleSelectedCells = this.handleSelectedCells.bind(this);
+    
+    this.state = {
+      layout: TABLE_DATA.layout,
+      content: TABLE_DATA.content,
+      selectedCells: []
+    }
+  }
+
+  getMergedCellContent(targetCell) {
+    const contents = this.state.layout.flatMap((row, rowIndex) => {
+      const mergedCellIndexes = row.flatMap((cell, cellIndex) => (
+        isSameCell(targetCell, cell) ? [cellIndex] : []
+      ));
+      return mergedCellIndexes.length
+        ? mergedCellIndexes.map(cellIndex => this.state.content[rowIndex][cellIndex])
+        : [];
     });
+  
+    return contents.flat();
   }
   
-  return columns.map(column => {
-    if (column.type === "group") {
-      return columnHelper.group({
-        id: column.id || uuid(),
-        header: () => <span>{column.value}</span>,
-        // see comment above function
-        columns: column.columns.map(column => generateAccessorColumns(column))
-      });
-    } else if (column.type === "accessor") {
-      return generateAccessorColumns(column)
-    }
-  });
-}
-// NOTE; Any above span tags would be replaced by custom cell containers, rendering Textbox/UncontrolledContentEditable component
-// cell: info - info is the cell data passed into the flexRender function
-
-const menuColumns = convertColumnsToMenuColumns(MOCK_COLUMNS);
-const initState = { columns: menuColumns, data: MOCK_MENU_DATA }
-
-const App = () => {
-  const [tables, setTables] = useState([initState]);
-  const [selectedCells, setSelectedCells] = useState({});
-  const [rowColorToggle, setRowColorToggle] = useState(false);
-
-  const handleAddDifferentTable = () => {
-    const originalTable = {
-      columns: MOCK_COLUMNS,
-      data: MOCK_MENU_DATA
-    }
-    const twoColumnTable = { 
-      columns: TWO_COLUMNS, 
-      data: TWO_COLUMNS_DATA
-    };
-    const realEstateTable = { 
-      columns: REAL_ESTATE_COLUMNS, 
-      data: REAL_ESTATE_DATA
-    };
-  
-    const tablesArr = [originalTable, twoColumnTable, realEstateTable];
-    const getRandomTable = () => {
-      return tablesArr[(Math.floor(Math.random() * tablesArr.length))];
-    }
-    const randomTable = getRandomTable();
-    const uniqueRandomTable = {
-      columns: convertColumnsToMenuColumns(randomTable.columns),
-      data: randomTable.data.map(row => ({
-        ...row,
-        id: uuid()
-      })),
-      id: uuid()
-    }
-
-    const updatedTables = tables.concat(uniqueRandomTable);
-    setTables(updatedTables)
+  getNumberOfRows() {
+    return this.state.layout.length - 1;
   }
 
-  const handleToggleRowStyling = () => {
-    setRowColorToggle(!rowColorToggle);
+  getNumberOfCols() {
+    return this.state.layout[0].length - 1;
+  }
 
-    const updatedTables = [...tables].map(table => {
-      for (let i = 0; i < table.data.length; i++) {
-        // every odd row index
-        if (i % 2 === 1) {
-          table.data[i].style = {
-            ...table.data[0].style,
-            backgroundColor: rowColorToggle ? "white" : "lightBlue"
-          }
-        }
+  resetRowOrder() {
+    const resetLayout = this.state.layout.map((row, rowIndex) => (
+      row.map((cell) => [rowIndex, cell[1]])
+    ));
+    this.setState({ layout: resetLayout})
+  }
+
+  moveRow(srcIndex, destIndex) {
+    this.setState({ layout: this.layout.splice(destIndex, 0, ...this.state.layout.splice(srcIndex, 1)) });
+    this.resetRowOrder();
+  }
+
+  computeRowSpan = (currentRowIndex, currentCellIndex) => {
+    const lastRowIndex = this.state.layout.findLastIndex((row, rowIndex) => {
+      if (rowIndex > currentRowIndex) {
+        const currentCell = this.state.layout[currentRowIndex][currentCellIndex];
+        return Boolean(row.findLast((cell) => isSameCell(currentCell, cell)));
       }
-      return table;
+      return false;
     });
-    setTables(updatedTables);
+    return (lastRowIndex === -1) ? 1 : (lastRowIndex + 1) - currentRowIndex;
+  };
+
+  computeColSpan = (currentRowIndex, currentCellIndex) => {
+    const currentRow = this.state.layout[currentRowIndex];
+    const currentCell = currentRow[currentCellIndex];
+    const nextCellIndex = currentRow.findLastIndex((nextCell, cellIndex) => {
+      if (cellIndex > currentCellIndex && isSameCell(nextCell, currentCell)) {
+        return true;
+      }
+      return false;
+    });
+    return (nextCellIndex === -1) ? 1 : ((nextCellIndex + 1) - currentCellIndex);
+  };
+
+  duplicateRow(rowIndex) {
+    const duplicatedCells = [...this.state.layout[rowIndex]];
+    this.setState({ layout: this.state.layout.splice(rowIndex, 0, duplicatedCells) });
+    this.resetRowOrder();
   }
 
-  const handleApplyBackgroundColor = () => {
-    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
-    Object.keys(selectedCells).forEach(id => document.getElementById(id).style.backgroundColor = randomColor)
-    setSelectedCells({})
+  addRow(rowIndex) {
+    const length = this.getNumberOfCols() + 1;
+    const newCells = Array.from({ length }, (v, i) => [rowIndex, i]);
+    const layoutClone = [...this.state.layout];
+    layoutClone.splice(rowIndex, 0, newCells)
+    const contentClone = [...this.state.content];
+    contentClone.splice(rowIndex, 0, newCells.map(cell => ['']));
+    this.setState({ 
+      layout: layoutClone,
+      content: contentClone
+    });
+    // this.resetRowOrder();
   }
 
-  const generateRowMetaData = data => data.reduce((acc, row) => {
-    // formatting row cells into indivual objects
-    // thinking is to apply styling to this object
-    const cells = Object.keys(row)
-      .filter(key => !["id", "style"].includes(key))
-      .map(key => ({
-        id: key,
-        value: row[key],
-        style: {}
-      }))
-    acc.push(cells)
-    return acc;
-  }, []);
+  deleteRow(rowIndex) {
+    const layoutClone = [...this.state.layout];
+    layoutClone.splice(rowIndex, 1);
+    const contentClone = [...this.state.content];
+    contentClone.splice(rowIndex, 1);
+    this.setState({ 
+      layout: layoutClone ,
+      content: contentClone
+    });
+    // this.resetRowOrder();
+  }
 
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="wrapper">
-        <div className="tableWrapper">
-          {tables.map(({ columns, data, id }) => (
-            <MultifeaturedTable
-              columns={columns}
-              data={data}
-              selectedCells={selectedCells}
-              setSelectedCells={setSelectedCells}
-              id={id}
-              rowMetaData={generateRowMetaData(data)}
-              width={TABLE_WIDTH}
-            />
-          ))}
-        </div>
-        <div className="actionButtons">
-          <button onClick={() => handleToggleRowStyling()}>Toggle Row Color</button>
-          <button onClick={() => handleAddDifferentTable()}>Add New Table</button>
-          {Object.keys(selectedCells).length > 0 && (
-            <button onClick={() => handleApplyBackgroundColor()}>Apply random color</button>
-          )}
+  addColumn(colIndex) {
+    const updatedLayout = this.state.layout.map((row, index) => {
+      const newArray = [...row];
+      newArray.splice(colIndex, 0, [index, colIndex]);
+      return newArray;
+    });
+    const updatedContent = this.state.content.map((row, index) => {
+      const newArray = [...row];
+      newArray.splice(colIndex, 0, ["", ""]);
+      return newArray;
+    });
+
+    this.setState({
+      layout: updatedLayout,
+      content: updatedContent
+    });
+  }
+
+  deleteColumn(colIndex) {
+    const updatedLayout = this.state.layout.map((row, index) => {
+      const newArray = [...row];
+      newArray.splice(colIndex, 1);
+      return newArray;
+    });
+    const updatedContent = this.state.content.map((row, index) => {
+      const newArray = [...row];
+      newArray.splice(colIndex, 1);
+      return newArray;
+    });
+
+    this.setState({
+      layout: updatedLayout,
+      content: updatedContent
+    });
+  }
+
+  handleSelectedCells(cell) {
+    let updatedSelectedCells = this.state.selectedCells;
+    if (updatedSelectedCells.includes(cell)) {
+      updatedSelectedCells = updatedSelectedCells.filter(selectedCell => selectedCell !== cell)
+    } else {
+      updatedSelectedCells.push(cell);
+    }
+    this.setState({ selectedCells: updatedSelectedCells });
+  }
+
+  render() {
+    const targetCells = []; // list of td that have a colspan or rowspan greater than 1
+
+    return (
+      <div className={style.tableContainer}>
+        <table className={style.tableWrapper}>
+          <tbody>
+            {this.state.layout.map((row, rowIndex) => (
+              <tr>
+                {row.map((currentCell, cellIndex) => {
+                  if (!isReferenceCell(targetCells, currentCell)) {
+                    const rowSpan = this.computeRowSpan(rowIndex, cellIndex);
+                    const colSpan = this.computeColSpan(rowIndex, cellIndex);
+                    let contents = this.state.content[rowIndex][cellIndex];
+                    if (colSpan !== 1 || rowSpan !== 1) {
+                      targetCells.push(currentCell);
+                      contents = this.getMergedCellContent(currentCell);
+                    }
+                    const content = contents.map(text => <div>{text}</div>)
+                    return (
+                      <td 
+                        onClick={() => this.handleSelectedCells(currentCell)} 
+                        colSpan={colSpan} 
+                        rowSpan={rowSpan}
+                        data-is-selected={this.state.selectedCells.includes(currentCell)}
+                      >
+                        {content}
+                      </td>
+                    )
+                  } else {
+                    return null;
+                  }
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className={style.tableActions}>
+          <button onClick={() => this.addRow(this.getNumberOfRows() + 1)}>Add Row</button>
+          <button onClick={() => this.deleteRow(this.getNumberOfRows())}>Delete Row</button>
+          <button onClick={() => this.addColumn(this.getNumberOfCols() + 1)}>Add Column</button>
+          <button onClick={() => this.deleteColumn(this.getNumberOfCols())}>Delete Column</button>
         </div>
       </div>
-    </DndProvider>
-  );
+    )
+  }
 }
 
-export default App;
+export default Table2;

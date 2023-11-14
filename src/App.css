@@ -308,6 +308,11 @@ input[type='number'] {
     position: relative;
     left: -20px;
     cursor: grab;
-    /* width: 20px;
-    height: 10px; */
+    height: 20px;
 }
+
+span {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+  }
